@@ -47,9 +47,9 @@ void setup()
   // Display.setTextXY(0,0);          //Set the cursor to Xth Page, Yth Column  
   // Display.putString("Hello World!"); //Print the String
 
-  for ( unsigned char c=0x80; c<0x90; c++) {
-    Display.putChar(c);
-  }
+  Display.putString("ABCDEFGHIJ");
+  Display.putInvertedString("ABCDEFGHIJKlmnopqrstuvwxyz");
+
   //Display.putString("\x80\x80\x80\x81\x81\x81\x82\x82\x82\x83\x83\x83");
   //Display.putString("\x84\x84\x84\x85\x85\x85x\x86\x86\x86\x87\x87\x87oooxXOA");
 
@@ -82,12 +82,17 @@ void toggle_light() {
 }
 
 void loop() {
+  static byte col = 0;
   b1.read();
   b2.read();
   b3.read();
   b4.read();
   if ( b1.get_event() & GloveButton::PRESS ) {
     Display.putChar(B_S);
+    col += 16;
+    Wire.beginTransmission(4);
+    Wire.write(col);
+    Wire.endTransmission();
   } else if ( b1.get_event() & GloveButton::HOLD ) {
     Display.putChar(B_S_L);
   } else if ( b1.get_event() & GloveButton::REPEAT ) {
@@ -97,6 +102,10 @@ void loop() {
   }
   if ( b2.get_event() & GloveButton::PRESS ) {
     Display.putChar(B_X);
+    col -= 16;
+    Wire.beginTransmission(4);
+    Wire.write(col);
+    Wire.endTransmission();
   } else if ( b2.get_event() & GloveButton::HOLD ) {
     Display.putChar(B_X_L);
   } else if ( b2.get_event() & GloveButton::REPEAT ) {
@@ -118,6 +127,16 @@ void loop() {
     Display.clearDisplay();
   }
   return;
+  
+  col += 1;
+  Wire.beginTransmission(4);
+  Wire.write(col);
+  Wire.endTransmission();
+
+  return;
+
+  
+  
   f1 = b1.get_down();
   if ( f1 ) {
     analogWrite(PIN_L1, 255);
@@ -154,5 +173,6 @@ void loop() {
 //  Display.setTextXY(7, 0);
 //  Display.putNumber(millis());
   //delay(1);
+
 }
 
