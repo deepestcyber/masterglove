@@ -81,6 +81,20 @@ void toggle_light() {
   }
 }
 
+uint8_t current_vest_mode = 0;
+char* vest_modes[] =  {"pulse", "other", "third"};
+uint8_t vest_modes_count = 3;
+
+void write_vest_mode() {
+  Display.setTextXY(0, 0);
+  Display.putString("Vest: ");
+  Display.putNumber(current_vest_mode);
+  Display.putString("/");
+  Display.putNumber(vest_modes_count-1);
+  Display.putString(": ");
+  Display.putString(vest_modes[current_vest_mode]);
+}
+
 void loop() {
   static byte col = 0;
   b1.read();
@@ -126,6 +140,8 @@ void loop() {
   } else if ( b4.get_event() & GloveButton::HOLD ) {
     Display.clearDisplay();
   }
+
+  write_vest_mode();
   return;
   
   col += 1;
