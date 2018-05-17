@@ -97,14 +97,19 @@ void toggle_light() {
   }
 }
 
+uint8_t blur_i = 0;
 void write_display() {
-  if ( !m_print ) {
-    return;
-  }
-  m_print = false;
   if ( m_state == 0 ) {
     // nothing
+    blur_i++;
+    if ( blur_i % 32 == 0 ) {
+      Display.sendData(random(256));
+    }
   } else {
+    if ( !m_print ) {
+      return;
+    }
+    m_print = false;
     Display.setTextXY(0, 0);
     if ( m_state == 1 ) {
       // mode
