@@ -87,7 +87,7 @@ uint8_t vest_modes_count = 3;
 
 void write_vest_mode() {
   Display.setTextXY(0, 0);
-  Display.putString("Vest: ");
+  Display.putString("V: ");
   Display.putNumber(current_vest_mode);
   Display.putString("/");
   Display.putNumber(vest_modes_count-1);
