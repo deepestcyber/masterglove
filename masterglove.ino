@@ -1,4 +1,4 @@
-#include <Wire.h>
+  #include <Wire.h>
 #include <GloveButton.h>
 #include <GloveDisplay.h>
 // 2, 4, 5, 6, 7, 8, 9, 10
@@ -41,9 +41,16 @@ uint8_t m_pos = 0;
 uint8_t m_bright = 3;
 uint8_t m_bright_max = 5;
 uint8_t m_mode = 0;
-uint8_t m_mode_max = 8;
+uint8_t m_mode_max = 4;
 boolean m_print = true;
 
+char* m_mode_names[5] = {
+  "pulse",
+  "circle",
+  "runner",
+  "rainbow",
+  "black",
+};
 void setup()
 {
   Wire.begin();
@@ -102,9 +109,9 @@ void write_display() {
   if ( m_state == 0 ) {
     // nothing
     blur_i++;
-    if ( blur_i % 32 == 0 ) {
+    //if ( blur_i % 16 == 0 ) {
       Display.sendData(random(256));
-    }
+    //}
   } else {
     if ( !m_print ) {
       return;
@@ -120,6 +127,11 @@ void write_display() {
       Display.putString("/");
       Display.putNumber(m_mode_max);
       Display.putString("  ");
+      Display.setTextXY(2, 0);
+      if ( m_mode <= m_mode_max and m_mode_names[m_mode] != NULL ) {
+        Display.putString(m_mode_names[m_mode]);
+      }
+      Display.putString("             ");
     } else if ( m_state == 2 ) {
       // bright
       Display.putInvertedString("Brightness");
@@ -178,7 +190,7 @@ uint8_t m_mode_save = 255;
 void menu_prev() {
   if ( m_state == 0 ) {
     m_mode_save = m_mode;
-    m_mode = 7;
+    m_mode = 3;
     send_mode();
   }
   if ( m_state == 1 ) {
